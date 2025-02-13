@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnHub - Online Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .course-card { transition: transform 0.2s; }
+        .course-card:hover { transform: translateY(-5px); }
+        .nav-link { cursor: pointer; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">LearnHub</a>
+            <div class="d-flex">
+                <button class="btn btn-outline-light me-2" onclick="showSection('userAuth')">User</button>
+                <button class="btn btn-outline-light" onclick="showSection('adminAuth')">Admin</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- User Auth Section -->
+    <div id="userAuth" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- User Signup -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">User Registration</h5>
+                        <form onsubmit="userSignup(event)">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="First Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Last Name" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- User Login -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">User Login</h5>
+                        <form onsubmit="userLogin(event)">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-success">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Auth Section -->
+    <div id="adminAuth" class="container mt-5 hidden">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Admin Signup -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Admin Registration</h5>
+                        <form onsubmit="adminSignup(event)">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="First Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Last Name" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </form>
+                    </div>
+                </div>
+    
+                <!-- Admin Login -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Admin Login</h5>
+                        <form onsubmit="adminLogin(event)">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-success">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="container mt-5 hidden">
+        <div class="d-flex justify-content-between mb-4">
+            <h3>Available Courses</h3>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+        
+        <!-- Course List -->
+        <div id="courseList" class="row row-cols-1 row-cols-md-3 g-4"></div>
+        
+        <!-- Purchased Courses -->
+        <h4 class="mt-5">My Purchases</h4>
+        <div id="purchasedCourses" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    </div>
+
+    <div id="adminDashboard" class="container mt-5 hidden">
+        <div class="d-flex justify-content-between mb-4">
+            <h3>Course Management</h3>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+    
+        <!-- Create Course Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Create New Course</h5>
+                <form id="createCourseForm" onsubmit="createCourse(event)">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" placeholder="Course Title" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" placeholder="Description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="number" class="form-control" placeholder="Price" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="url" class="form-control" placeholder="Image URL" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Course</button>
+                </form>
+            </div>
+        </div>
+    
+        <!-- Edit Course Modal -->
+        <div class="modal fade" id="editCourseModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Course</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form onsubmit="updateCourse(event)">
+                        <div class="modal-body">
+                            <input type="hidden" id="editCourseId">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="editTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="editDescription" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <input type="number" class="form-control" id="editPrice" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="url" class="form-control" id="editImageUrl" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Admin's Course List -->
+        <div id="adminCourseList" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        let currentUser = null;
+        let currentRole = null;
+
+        // Show/hide sections
+        function showSection(sectionId) {
+        // Hide all auth sections
+        ['userAuth', 'adminAuth'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        // Show requested section
+        document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+        // User Authentication
+        async function userSignup(e) {
+            e.preventDefault();
+            const [email, password, firstName, lastName] = Array.from(e.target.elements).map(i => i.value);
+            
+            try {
+                await axios.post(`${API_BASE}/api/v1/user/signup`, { email, password, firstName, lastName });
+                alert('Registration successful! Please login.');
+            } catch (error) {
+                alert(error.response?.data?.message || 'Registration failed');
+            }
+        }
+
+        async function userLogin(e) {
+            e.preventDefault();
+            const [email, password] = Array.from(e.target.elements).map(i => i.value);
+            
+            try {
+                const res = await axios.post(`${API_BASE}/api/v1/user/signin`, { email, password });
+                localStorage.setItem('token', res.data.token);
+                currentRole = 'user';
+                showDashboard();
+                loadCourses();
+                loadPurchasedCourses();
+            } catch (error) {
+                alert('Login failed');
+            }
+        }
+
+        // Add Admin Authentication functions
+    async function adminSignup(e) {
+        e.preventDefault();
+        const [email, password, firstName, lastName] = Array.from(e.target.elements).map(i => i.value);
+        
+        try {
+            await axios.post(`${API_BASE}/api/v1/admin/signup`, { email, password, firstName, lastName });
+            alert('Admin registration successful! Please login.');
+        } catch (error) {
+            alert(error.response?.data?.message || 'Registration failed');
+        }
+    }
+
+    async function adminLogin(e) {
+        e.preventDefault();
+        const [email, password] = Array.from(e.target.elements).map(i => i.value);
+        
+        try {
+            const res = await axios.post(`${API_BASE}/api/v1/admin/signin`, { email, password });
+            localStorage.setItem('token', res.data.token);
+            currentRole = 'admin';
+            showDashboard();
+            loadAdminCourses();
+        } catch (error) {
+            alert('Admin login failed');
+        }
+    }
+
+    async function createCourse(e) {
+    e.preventDefault();
+    const [title, description, price, imageUrl] = Array.from(e.target.elements).map(i => i.value);
+    
+        try {
+            await axios.post(`${API_BASE}/api/v1/admin/course`, {
+                title, description, price: parseFloat(price), imageUrl
+            }, {
+                headers: { token: localStorage.getItem('token') }
+            });
+            alert('Course created successfully!');
+            e.target.reset();
+            loadAdminCourses();
+        } catch (error) {
+            alert('Course creation failed: ' + (error.response?.data?.message || 'Server error'));
+        }
+    }
+
+    async function loadAdminCourses() {
+        try {
+            const res = await axios.get(`${API_BASE}/api/v1/admin/course/bulk`, {
+                headers: { token: localStorage.getItem('token') }
+            });
+            
+            const coursesHtml = res.data.courses.map(course => `
+                <div class="col">
+                    <div class="card course-card h-100">
+                        <img src="${course.imageUrl}" class="card-img-top" alt="${course.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${course.title}</h5>
+                            <p class="card-text">${course.description}</p>
+                            <p class="text-success">$${course.price}</p>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-warning" onclick="openEditModal('${course._id}')">Edit</button>
+                                <button class="btn btn-danger" onclick="deleteCourse('${course._id}')">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('adminCourseList').innerHTML = coursesHtml;
+        } catch (error) {
+            console.error('Failed to load admin courses:', error);
+            alert('Failed to load courses');
+        }
+    }
+
+    function openEditModal(courseId) {
+        // Fetch course details and populate modal
+        axios.post(`${API_BASE}/api/v1/admin/courseById`,
+
+            { courseId },
+            {  headers: { token: localStorage.getItem('token') }
+        })
+            .then(res => {
+                const course = res.data.course;
+                document.getElementById('editCourseId').value = courseId;
+                document.getElementById('editTitle').value = course.title;
+                document.getElementById('editDescription').value = course.description;
+                document.getElementById('editPrice').value = course.price;
+                document.getElementById('editImageUrl').value = course.imageUrl;
+                new bootstrap.Modal(document.getElementById('editCourseModal')).show();
+            })
+            .catch(error => alert('Failed to load course details'));
+    }
+
+    async function updateCourse(e) {
+        e.preventDefault();
+        const courseId = document.getElementById('editCourseId').value;
+        
+        try {
+            await axios.put(`${API_BASE}/api/v1/admin/course`, {
+                headers: { token: localStorage.getItem('token') },
+                courseId,
+                title: document.getElementById('editTitle').value,
+                description: document.getElementById('editDescription').value,
+                price: parseFloat(document.getElementById('editPrice').value),
+                imageUrl: document.getElementById('editImageUrl').value
+            }, {
+                headers: { token: localStorage.getItem('token') }
+            });
+            alert('Course updated successfully!');
+            loadAdminCourses();
+            bootstrap.Modal.getInstance(document.getElementById('editCourseModal')).hide();
+        } catch (error) {
+            alert('Update failed: ' + (error.response?.data?.message || 'Server error'));
+        }
+    }
+
+    async function deleteCourse(courseId) {
+        if (!confirm('Are you sure you want to delete this course?')) return;
+        
+        try {
+            await axios.delete(`${API_BASE}/api/v1/admin/course`, {
+                data: { courseId },
+                headers: { token: localStorage.getItem('token') }
+            });
+            alert('Course deleted successfully!');
+            loadAdminCourses();
+        } catch (error) {
+            alert('Deletion failed: ' + (error.response?.data?.message || 'Server error'));
+        }
+    }
+
+    async function loadPurchasedCourses() {
+        try {
+            // Fetch purchased courses for the logged-in user
+            const res = await axios.get(`${API_BASE}/api/v1/user/purchases`, {
+                headers: { token: localStorage.getItem('token') }
+            });
+
+            // Clear previous content
+            const purchasedCoursesContainer = document.getElementById('purchasedCourses');
+            purchasedCoursesContainer.innerHTML = '';
+
+            // Check if there are any purchased courses
+            if (res.data.length === 0) {
+                purchasedCoursesContainer.innerHTML = '<p>You have not purchased any courses yet.</p>';
+                return;
+            }
+
+            // Display purchased courses
+            const coursesHtml = res.data.coursesData.map(course => `
+                <div class="col">
+                    <div class="card course-card h-100">
+                        <img src="${course.imageUrl}" class="card-img-top" alt="${course.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${course.title}</h5>
+                            <p class="card-text">${course.description}</p>
+                            <p class="text-success">$${course.price}</p>
+                            <button class="btn btn-success" disabled>Already Purchased</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            purchasedCoursesContainer.innerHTML = coursesHtml;
+        } catch (error) {
+            console.error('Failed to load purchased courses:', error);
+            alert('Failed to load purchased courses. Please try again later.');
+        }
+    }
+
+    // Course Purchasing
+    async function purchaseCourse(courseId) {
+        try {
+            // Get the list of purchased courses
+            const purchasedCourses = await getPurchasedCourses();
+
+            // Check if the course is already purchased
+            if (purchasedCourses.some(purchase => purchase._id === courseId)) {
+                alert("You've already purchased this course!");
+                return; // Stop execution if already purchased
+            }
+
+            // If not purchased, proceed with the API call
+            const res = await axios.post(`${API_BASE}/api/v1/course/purchase`, 
+                { courseId }, 
+                { headers: { token: localStorage.getItem('token') } }
+            );
+
+            alert("Purchase successful!");
+            loadCourses(); // Refresh the list
+            loadPurchasedCourses(); // Update purchased courses
+        } catch (error) {
+            alert(error.response?.data?.message || "Purchase failed");
+        }
+    }
+
+    // Helper function to get purchased courses
+    async function getPurchasedCourses() {
+        try {
+            const res = await axios.get(`${API_BASE}/api/v1/user/purchases`, {
+                headers: { token: localStorage.getItem('token') }
+            });
+            return res.data.purchases.map(course => course._id); // Return array of course IDs
+        } catch (error) {
+            console.error('Failed to fetch purchased courses:', error);
+            return []; // Return empty array if there's an error
+        }
+    }
+
+    // Load Courses
+    async function loadCourses() {
+        try {
+            // Get all courses
+            const coursesRes = await axios.get(`${API_BASE}/api/v1/course/preview`);
+            
+            // Get user's purchased courses
+            const purchasedCourses = await getPurchasedCourses();
+
+            // Render courses
+            const coursesHtml = coursesRes.data.allCourses.map(course => `
+                <div class="col">
+                    <div class="card course-card h-100">
+                        <img src="${course.imageUrl}" class="card-img-top">
+                        <div class="card-body">
+                            <h5>${course.title}</h5>
+                            <p>${course.description}</p>
+                            <p>$${course.price}</p>
+                            <button 
+                                onclick="purchaseCourse('${course._id}')" 
+                                class="btn btn-primary"
+                                ${purchasedCourses.includes(course._id) ? 'disabled' : ''}
+                            >
+                                ${purchasedCourses.includes(course._id) ? 'Purchased ✓' : 'Enroll Now'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('courseList').innerHTML = coursesHtml;
+        } catch (error) {
+            console.error('Failed to load courses:', error);
+        }
+    }
+
+    // Show Dashboard
+    function showDashboard() {
+        document.getElementById('userAuth').classList.add('hidden');
+        document.getElementById('adminAuth').classList.add('hidden');
+        if (currentRole === 'user') {
+            document.getElementById('userDashboard').classList.remove('hidden');
+        } else {
+            document.getElementById('adminDashboard').classList.remove('hidden');
+        }
+    }
+
+    // Logout
+    function logout() {
+        localStorage.removeItem('token');
+        currentUser = null;
+        currentRole = null;
+        showSection('userAuth');
+    }
+
+    // Initialize
+    function init() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Verify token and determine role
+            // You might need an /me endpoint to verify token
+            // For simplicity, we'll assume user is logged in
+            showDashboard();
+        }
+    }
+
+        init();
+    </script>
+</body>
+</html>
