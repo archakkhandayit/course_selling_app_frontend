@@ -33,12 +33,7 @@ async function userSignup(e) {
 }
 
 async function userLogin(e) {
-  //  Clearning all userAuth input textContent
-  const userAuth = document.getElementById("userAuth");
-  const inputs = userAuth.querySelectorAll("input");
-  inputs.forEach((input) => {
-    input.value = ""; // Clears the value of each input
-  });
+  //  TODO PENDING - Clear all userAuth input textContent
 
   e.preventDefault();
   const [email, password] = Array.from(e.target.elements).map((i) => i.value);
@@ -80,12 +75,7 @@ async function adminSignup(e) {
 }
 
 async function adminLogin(e) {
-  //  Clearning all adminAuth input textContent
-  const userAuth = document.getElementById("adminAuth");
-  const inputs = userAuth.querySelectorAll("input");
-  inputs.forEach((input) => {
-    input.value = ""; // Clears the value of each input
-  });
+  //  TODO PENDING - Clear all adminAuth input textConten
 
   e.preventDefault();
   const [email, password] = Array.from(e.target.elements).map((i) => i.value);
