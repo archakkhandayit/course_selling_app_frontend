@@ -399,6 +399,7 @@ function init() {
   const token = localStorage.getItem("token");
   currentRole = localStorage.getItem("currentRole") || null;
   if (!currentRole) {
+    // Default showing userAuth
     showSection("userAuth");
   } else {
     if (token) {
@@ -414,8 +415,6 @@ function init() {
       } else if (currentRole === "admin") {
         loadAdminCourses();
       }
-
-      // Default showing userAuth
     }
   }
 }
