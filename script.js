@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3500";
+const API_BASE = "https://course-selling-app-peach.vercel.app";
 let currentUser = null;
 let currentRole = localStorage.getItem("currentRole") || null;
 
@@ -33,8 +33,7 @@ async function userSignup(e) {
 }
 
 async function userLogin(e) {
-  //  TODO PENDING - Clear all userAuth input textContent
-
+  
   e.preventDefault();
   const [email, password] = Array.from(e.target.elements).map((i) => i.value);
 
@@ -49,8 +48,16 @@ async function userLogin(e) {
     showDashboard();
     loadCourses();
     loadPurchasedCourses();
+
+    //  Clearning all userAuth input textContent
+  const userAuth = document.getElementById("userAuth");
+  const inputs = userAuth.querySelectorAll("input");
+  inputs.forEach((input) => {
+    input.value = ""; // Clears the value of each input
+  });
+
   } catch (error) {
-    alert("Login failed");
+    alert(error.response?.data?.message || "Login failed");
   }
 }
 
@@ -75,11 +82,10 @@ async function adminSignup(e) {
 }
 
 async function adminLogin(e) {
-  //  TODO PENDING - Clear all adminAuth input textConten
-
+  
   e.preventDefault();
   const [email, password] = Array.from(e.target.elements).map((i) => i.value);
-
+  
   try {
     const res = await axios.post(`${API_BASE}/api/v1/admin/signin`, {
       email,
@@ -90,8 +96,16 @@ async function adminLogin(e) {
     // currentRole = 'admin';
     showDashboard();
     loadAdminCourses();
+
+    //  Clearning all adminAuth input textContent
+    const userAuth = document.getElementById("adminAuth");
+    const inputs = userAuth.querySelectorAll("input");
+    inputs.forEach((input) => {
+      input.value = ""; // Clears the value of each input
+    });
+
   } catch (error) {
-    alert("Admin login failed");
+    alert(error.response?.data?.message || "Admin login failed");
   }
 }
 
@@ -155,7 +169,7 @@ async function loadAdminCourses() {
     document.getElementById("adminCourseList").innerHTML = coursesHtml;
   } catch (error) {
     console.error("Failed to load admin courses:", error);
-    alert("Failed to load courses");
+    alert(error.response?.data?.message || "Failed to load courses");
   }
 }
 
@@ -177,7 +191,7 @@ function openEditModal(courseId) {
       document.getElementById("editImageUrl").value = course.imageUrl;
       new bootstrap.Modal(document.getElementById("editCourseModal")).show();
     })
-    .catch((error) => alert("Failed to load course details"));
+    .catch((error) => alert(error.response?.data?.message || "Failed to load course details"));
 }
 
 async function updateCourse(e) {
@@ -269,7 +283,7 @@ async function loadPurchasedCourses() {
     purchasedCoursesContainer.innerHTML = coursesHtml;
   } catch (error) {
     console.error("Failed to load purchased courses:", error);
-    alert("Failed to load purchased courses. Please try again later.");
+    alert(error.response?.data?.message || "Failed to load purchased courses. Please try again later.");
   }
 }
 
@@ -388,8 +402,9 @@ function logout() {
 function init() {
   const token = localStorage.getItem("token");
   currentRole = localStorage.getItem("currentRole") || null;
+
+  // Default showing userAuth
   if (!currentRole) {
-    // Default showing userAuth
     showSection("userAuth");
   } else {
     if (token) {
@@ -405,6 +420,7 @@ function init() {
       } else if (currentRole === "admin") {
         loadAdminCourses();
       }
+
     }
   }
 }
