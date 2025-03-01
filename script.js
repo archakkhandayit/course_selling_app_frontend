@@ -1,4 +1,4 @@
-const API_BASE = "https://course-selling-app-peach.vercel.app";
+const API_BASE = "http://localhost:3500";
 let currentUser = null;
 let currentRole = localStorage.getItem("currentRole") || null;
 
@@ -387,6 +387,26 @@ function showDashboard() {
   }
 }
 
+function handleUserBtn() {
+  const token = localStorage.getItem("token");
+  const currentRole = localStorage.getItem("currentRole");
+  if( token || currentRole ) {
+    alert("Please Logout First!");
+  } else {
+    showSection('userAuth');
+  }
+}
+
+function handleAdminBtn() {
+  const token = localStorage.getItem("token")
+  const currentRole = localStorage.getItem("currentRole")
+  if( token || currentRole ) {
+    alert("Please Logout First!");
+  } else {
+    showSection('adminAuth');
+  }
+}
+
 // Logout
 function logout() {
   localStorage.removeItem("token");
@@ -401,7 +421,7 @@ function logout() {
 // Initialize
 function init() {
   const token = localStorage.getItem("token");
-  currentRole = localStorage.getItem("currentRole") || null;
+  currentRole = localStorage.getItem("currentRole");
 
   // Default showing userAuth
   if (!currentRole) {
