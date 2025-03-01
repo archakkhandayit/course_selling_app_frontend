@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3500";
+const API_BASE = "https://course-selling-app-peach.vercel.app";
 let currentUser = null;
 let currentRole = localStorage.getItem("currentRole") || null;
 
