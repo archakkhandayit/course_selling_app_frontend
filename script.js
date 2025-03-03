@@ -1,4 +1,4 @@
-const API_BASE = "https://course-selling-app-peach.vercel.app";
+const API_BASE = "http://localhost:3500";
 let currentUser = null;
 let currentRole = localStorage.getItem("currentRole") || null;
 
@@ -306,7 +306,7 @@ async function purchaseCourse(courseId) {
       { headers: { token: localStorage.getItem("token") } }
     );
 
-    alert("Purchase successful!");
+    alert(res.data?.message || "Purchase successful!");
     loadCourses(); // Refresh the list
     loadPurchasedCourses(); // Update purchased courses
   } catch (error) {
